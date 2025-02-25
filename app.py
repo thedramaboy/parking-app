@@ -64,5 +64,69 @@ def get_parking_details(id):
         'available': spot.available
     })
 
+# Route to reserve parking
+@app.route('/reserve', methods=['POST'])
+def reserve_parking():
+    data = request.json
+    spot_id = data.get('spot_id')
+
+    spot = ParkingSpot.query.get(spot_id)
+    if not spot:
+        return jsonify({"error": "Parking spot not found"}), 404
+    if not spot.available:
+        return jsonify({"error": "Parking spot is already reserved"}), 400
+
+    spot.available = False
+    db.session.commit()
+
+    return jsonify({"message": "Parking spot reserved successfully", "spot_id": spot.id})
+
+# Route to cancel reservation
+@app.route('/cancel_reservation', methods=['POST'])
+def cancel_reservation():
+    data = request.json
+    spot_id = data.get('spot_id')
+
+    spot = ParkingSpot.query.get(spot_id)
+    if not spot:
+        return jsonify({"error": "Parking spot not found"}), 404
+    if spot.available:
+        return jsonify({"error": "Parking spot is already available"}), 400
+    
+    spot.available = True
+    db.session.commit()
+
+    return jsonify({"message": "Reservation canceled", "spot_id": spot.id})
+
+from math import radians, cos, sin, sqrt, atan2
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    R = 6371  # รัศมีโลก (กิโลเมตร)
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c  # ระยะทางเป็นกิโลเมตร
+
+# Route to nearest parking
+@app.route('/nearest', methods=['POST'])
+def find_nearest_parking():
+    data = request.json
+    user_lat = data.get('latitude')
+    user_lon = data.get('longitude')
+
+    spots = ParkingSpot.query.filter_by(available=True).all()
+    if not spots:
+        return jsonify({"error": "No available parking spots"}), 404
+
+    nearest_spot = min(spots, key=lambda spot: calculate_distance(user_lat, user_lon, spot.latitude, spot.longitude))
+    
+    return jsonify({
+        "spot_id": nearest_spot.id,
+        "name": nearest_spot.name,
+        "distance_km": calculate_distance(user_lat, user_lon, nearest_spot.latitude, nearest_spot.longitude)
+    })
+
+
 if __name__ == '__main__':
     app.run(debug=True)
