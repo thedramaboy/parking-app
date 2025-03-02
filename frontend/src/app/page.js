@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "./components/Navbar";
 
 export default function Home() {
       const [spots, setSpots] = useState([]);
@@ -47,29 +48,38 @@ export default function Home() {
       }
 
       return (
-        <div className="p-4">
-          <h1 className="text-2xl font-bold">Available Parking Spots</h1>
-          <ul className="mt-4 space-y-2">
-            {spots.map(spot => (
-              <li key={spot.id} className="p-4 border rounded-md bg-gray-100 flex justify-between items-center">
-              <span>{spot.name} - {spot.available ? "Available" : "Reserved"}</span>
-              {spot.available ? (
-                <button 
-                  className="bg-blue-500 text-white px-3 py-1 rounded-md"
-                  onClick={() => reserveSpot(spot.id)}>
-                  Reserve
-                </button>
-              ) : (
-                <button 
-                  className="bg-red-500 text-white px-3 py-1 rounded-md"
-                  onClick={() => cancelReservation(spot.id)}>
-                  Cancel
-                </button>
-              )}
-            </li>
-            ))}
-          </ul>
-          <div className="mt-6 p-4 border rounded-md bg-gray-50">
+        <div className="min-h-screen bg-gray-100">
+          <Navbar />
+          <div className="container mx-auto p-6"></div>
+            <h1 className="text-2xl font-bold">Available Parking Spots</h1>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {spots.map(spot => (
+                <div key={spot.id} className="bg-white shadow-md rounded-lg p-4">
+                  <h2 className="text-xl font-semibold text-gray-700">{spot.name}</h2>
+                  <p className="text-gray-500">{spot.price_per_hour} per hour</p>
+                  <p className={`mt-2 font-bold ${spot.available ? "text-green-500" : "text-red-500"}`}>
+                    {spot.available ? "Available" : "Reserved"}
+                  </p>
+                  <div className="mt-4 flex space-x-2">
+                    {spot.available ? (
+                      <button 
+                        className="bg-blue-500 text-white px-3 py-1 rounded-md"
+                        onClick={() => reserveSpot(spot.id)}>
+                        Reserve
+                      </button>
+                    ) : (
+                      <button 
+                        className="bg-red-500 text-white px-3 py-1 rounded-md"
+                        onClick={() => cancelReservation(spot.id)}>
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          <div className="mt-6 p-6 bg-white shadow-md rounded-lg">
             <h2 className="text-xl font-bold">Find Nearest Parking Spot</h2>
             <div className="mt-4 flex space-x-2">
               <input 
