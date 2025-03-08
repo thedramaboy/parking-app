@@ -127,3 +127,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  background-color: white;
+  color: black;
+}
+
+.dark body {
+  background-color: #121212;
+  color: white;
+}
