@@ -12,7 +12,47 @@ yarn dev
 pnpm dev
 # or
 bun dev
+
+# Directory tree
+parking-app/
+│
+├── backend/
+│   ├── app.py
+│   ├── models.py
+│   ├── database.db
+│   ├── venv/
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── public/
+│   ├── styles/
+│   │   └── globals.css
+│   │
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── page.js              # Home page
+│   │   │   ├── layout.js            
+│   │   │   └── reservations/
+│   │   │       └── page.js         # Reservations page
+│   │   │
+│   │   ├── components/
+│   │   │   ├── Navbar.js
+│   │   │   └── ui/
+│   │   │       ├── button.jsx
+│   │   │       └── card.jsx        
+│   │   │
+│   │   ├── lib/
+│   │   │   └── utils.js      
+│   │   │
+│   ├── .eslintrc.json
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── package.json
+│   └── next.config.js
+│
+└── README.md
 ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
