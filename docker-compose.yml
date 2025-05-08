@@ -24,3 +24,6 @@ services:
       - FLASK_ENV=development
     depends_on:
       - db
+
+volumes:
+  mysql-data:
